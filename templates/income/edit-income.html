@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'income' %}">Income</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Income</li>
+        </ol>
+    </nav>
+
+    <!-- Expense Form -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Edit Income</h5>
+        </div>
+        <div class="card-body">
+            <form action="{% url 'income-edit' income.id %}" method="post" class="d-flex flex-column">
+                {% include "partials/_messages.html" %}
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount" value="{{ values.amount }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter description" value="{{ values.description }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="source">Source</label>
+                    <select class="form-control" id="source" name="source" required>
+                        <option value="" disabled>Select a Source</option>
+                        {% for source in sources %}
+                        <option value="{{ source.name }}" {% if source.name == values.source %}selected{% endif %}>{{ source.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="income_date">Date of Income</label>
+                    <input type="date" class="form-control" id="income_date" name="income_date" value="{% if values.date %}{{ values.date|date:'Y-m-d' }}{% endif %}">
+                </div>
+                
+                <div class="mt-4 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{% url 'income-delete' income.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this income?');">Delete</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

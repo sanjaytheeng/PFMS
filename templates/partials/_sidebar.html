@@ -1,0 +1,64 @@
+{% load static %}
+
+
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+  <div class="position-sticky pt-3">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" href="{% url 'dashboard_index' %}">
+          <span data-feather="home"></span>
+          Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/expenses/' %}active{% endif %}" href="{% url 'expenses' %}">
+          <span data-feather="trending-down"></span>
+          Expenses
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/income/' %}active{% endif %}" href="{% url 'income' %}">
+          <span data-feather="dollar-sign"></span>
+          Income
+        </a>
+      </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Summary</span>
+    </h6>
+    <ul class="nav flex-column mb-2">
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/stats' %}active{% endif %}" href="{% url 'stats' %}">
+          <span data-feather="file-text"></span>
+          Expenses Summary
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/income/statsicome' %}active{% endif %}" href="{% url 'statsincome' %}">
+          <span data-feather="file-text"></span>
+          Income Summary
+        </a>
+      </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Settings</span>
+    </h6>
+    <ul class="nav flex-column mb-2">
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/preferences/' %}active{% endif %}" href="{% url 'preferences' %}">
+          <span data-feather="settings"></span>
+          General
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/accountsetting/account/settings/' %}active{% endif %}" href="{% url 'account_settings' %}">
+          <span data-feather="user"></span>
+          Account
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+

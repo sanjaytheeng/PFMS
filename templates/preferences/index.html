@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<link id="theme-style" rel="stylesheet" href="{% static 'css/light.css' %}">
+
+<div class="container mt-3">
+    <h5>Preferred Currency</h5>
+    {% include 'partials/_messages.html' %}
+    <form action="{% url 'preferences' %}" method="post">
+        {% csrf_token %}
+    <div class="input-group">
+        <select name="currency" class="custom-select form-control" id="inputGroupSelect04">
+
+            {% if user_preferences.currency %}
+            <option name="currency" value="{{user_preferences.currency}}" selected>{{user_preferences.currency}}</option>
+            {% endif %}
+
+            
+            {% for currency in currencies %}
+
+            <option name="currency" value="{{currency.name}} - {{currency.values}}">{{currency.name}} - {{currency.values}}</option>
+
+            {% endfor %}
+        </select>
+        <div class="input-group-append">
+            <input class="btn btn-outline-secondary" type="submit" value="Save" />
+        </div>
+
+        <!-- <div class="toogle">
+            <button id="theme-toggle">Toggle Theme</button>
+        
+            <script>
+                // Check for saved theme preference
+                const theme = localStorage.getItem('theme') || 'light';
+                const themeToggleBtn = document.getElementById('theme-toggle');
+                const themeStyle = document.getElementById('theme-style');
+        
+                // Apply the saved theme
+                themeStyle.href = theme === 'dark' ? "{% static 'css/dark.css' %}" : "{% static 'css/light.css' %}";
+        
+                themeToggleBtn.addEventListener('click', function() {
+                    // Toggle between light and dark themes
+                    const currentTheme = themeStyle.href.includes('light.css') ? 'light' : 'dark';
+                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                    themeStyle.href = newTheme === 'dark' ? "{% static 'css/dark.css' %}" : "{% static 'css/light.css' %}";
+        
+                    // Save the user's preference
+                    localStorage.setItem('theme', newTheme);
+                });
+            </script>
+        </div> -->
+    </div>
+    </form> 
+    <hr>
+</div>
+
+<!-- <script src="{% static 'js/toogle.js' %}"></script> -->
+
+
+{% endblock %}

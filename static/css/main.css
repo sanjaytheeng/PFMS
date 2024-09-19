@@ -1,0 +1,42 @@
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+  /* Custom styles for the registration form */
+.card {
+  border-radius: 8px;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.form-control-lg {
+  height: calc(1.5em + .75rem + 2px);
+  font-size: 1.25rem;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.showPasswordToggle {
+  cursor: pointer;
+  transition: all;
+}
+
+.showPasswordToggle:hover {
+  transform: scale(1.2);
+}

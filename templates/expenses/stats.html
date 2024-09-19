@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Expenses Summary</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Summary</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Summary</h1>
+    </div>
+
+    <!-- Expense Summary Overview -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Expenses Overview</h5>
+                    <canvas id="pieChart" style="width: 100%; height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Category Breakdown</h5>
+                    <canvas id="polarChart" style="width: 100%; height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Charts -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Bar Chart</h5>
+                    <canvas id="barChart" style="width: 100%; height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Line Chart</h5>
+                    <canvas id="lineChart" style="width: 100%; height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Summary Table -->
+    <div class="card mt-4">
+        <div class="card-header">
+            Detailed Summary
+        </div>
+        <div class="card-body">
+{% include 'expenses/search/_search.html' with table_id='expensetable' %}
+
+            <table class="table table-striped table-hover" id='expensetable'>
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Amount ({{pref.currency }})</th>  
+                        <th scope="col">Category</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ expense.amount }}</td>
+                        <td>{{ expense.category }}</td>
+                        <td>{{ expense.description }}</td>
+                        <td>{{ expense.date }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No expenses available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-right font-weight-bold">Total:</td>
+                        <td class="font-weight-bold">{{ total }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="{% static 'js/stats.js' %}"></script>
+
+{% endblock content %}

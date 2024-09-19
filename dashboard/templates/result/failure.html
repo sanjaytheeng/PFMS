@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Payment Failed</h1>
+    <p>Unfortunately, your payment could not be processed. Please try again.</p>
+    <script>
+        // Optionally, you can add logic here if needed
+        document.getElementById("payment-form").style.display = "block";
+        // You might also want to reset the form
+        document.getElementById("payment-form").reset();
+    </script>
+
+{% endblock content %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="account-settings-container container mt-5">
+    <h1 class="mb-4 text-center">Account Settings</h1>
+
+    <!-- User Subscription Information Banner -->
+    {% if request.user.user_preference.premium or request.user.user_preference.subscription_until %}
+    <div class="subscription-banner alert alert-info text-center mb-4">
+        {% if request.user.user_preference.premium %}
+        <p class="mb-0">
+            <i class="bi bi-star-fill text-warning"></i> You are a premium user!
+        </p>
+        {% else %}
+        <p class="mb-0">
+            <i class="bi bi-star"></i> You are using a free account.
+        </p>
+        {% endif %}
+        
+        {% if request.user.user_preference.subscription_until %}
+        <p class="mb-0">
+            Subscription valid until: {{ request.user.user_preference.subscription_until }}
+        </p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <form method="POST" class="account-settings-form card p-4 shadow-sm">
+        {% csrf_token %}
+        {% if messages %}
+        <div class="messages mt-4">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Update Account Information Section -->
+        <div class="account-section mb-4">
+            <h2 class="mb-3">Update Account Information</h2>
+            <div class="form-group mb-3">
+                <label for="{{ user_form.username.id_for_label }}" class="form-label">
+                    <i class="bi bi-person-circle"></i> Username
+                </label>
+                {{ user_form.username }}
+                {% if user_form.username.errors %}
+                    <div class="form-error text-danger mt-1">
+                        {{ user_form.username.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group mb-3">
+                <label for="{{ user_form.email.id_for_label }}" class="form-label">
+                    <i class="bi bi-envelope"></i> Email Address
+                </label>
+                {{ user_form.email }}
+                {% if user_form.email.errors %}
+                    <div class="form-error text-danger mt-1">
+                        {{ user_form.email.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group mb-3">
+                <label for="{{ user_form.first_name.id_for_label }}" class="form-label">
+                    <i class="bi bi-person"></i> First Name
+                </label>
+                {{ user_form.first_name }}
+                {% if user_form.first_name.errors %}
+                    <div class="form-error text-danger mt-1">
+                        {{ user_form.first_name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group mb-3">
+                <label for="{{ user_form.last_name.id_for_label }}" class="form-label">
+                    <i class="bi bi-person"></i> Last Name
+                </label>
+                {{ user_form.last_name }}
+                {% if user_form.last_name.errors %}
+                    <div class="form-error text-danger mt-1">
+                        {{ user_form.last_name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Change Password Section -->
+        <div class="password-section mb-4">
+            <h2 class="mb-3">Change Password</h2>
+            <div class="form-group mb-3">
+                <label for="{{ password_form.old_password.id_for_label }}" class="form-label">
+                    <i class="bi bi-lock"></i> Current Password
+                </label>
+                {{ password_form.old_password }}
+                {% if password_form.old_password.errors %}
+                    <div class="form-error text-danger mt-1">
+                        {{ password_form.old_password.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group mb-3">
+                <label for="{{ password_form.new_password1.id_for_label }}" class="form-label">
+                    <i class="bi bi-lock-fill"></i> New Password
+                </label>
+                {{ password_form.new_password1 }}
+                {% if password_form.new_password1.errors %}
+                    <div class="form-error text-danger mt-1">
+                        {{ password_form.new_password1.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group mb-3">
+                <label for="{{ password_form.new_password2.id_for_label }}" class="form-label">
+                    <i class="bi bi-lock-fill"></i> Confirm New Password
+                </label>
+                {{ password_form.new_password2 }}
+                {% if password_form.new_password2.errors %}
+                    <div class="form-error text-danger mt-1">
+                        {{ password_form.new_password2.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Update Settings</button>
+    </form>
+</div>
+{% endblock %}

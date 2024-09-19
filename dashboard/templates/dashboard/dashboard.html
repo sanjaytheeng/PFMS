@@ -1,0 +1,206 @@
+{% extends "base.html" %} {% load humanize %} {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container mt-5">
+  <h1 class="text-left mb-4 h3">Dashboard</h1>
+
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-gradient-primary text-black">
+      <h5 class="card-title mb-0 text-center">Financial Summary</h5>
+    </div>
+    <div class="card-body">
+      <div class="row text-center">
+        <div class="col-md-4 mb-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">Total Expenses</h6>
+              <p class="h4 text-danger font-weight-bold">
+                {{request.user.user_preference.get_curr}}
+                {{total_expenses|floatformat:2|intcomma}}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">Total Income</h6>
+              <p class="h4 text-success font-weight-bold">
+                {{request.user.user_preference.get_curr}}
+                {{total_income|floatformat:2|intcomma}}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">Balance</h6>
+              {% if balance < 0 %}
+              <p class="h4 text-danger font-weight-bold">
+                {{request.user.user_preference.get_curr}}
+                {{balance|floatformat:2|intcomma}}
+              </p>
+              {% else %}
+              <p class="h4 text-success font-weight-bold">
+                {{request.user.user_preference.get_curr}}
+                {{balance|floatformat:2|intcomma}}
+              </p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">Total Income vs Expenses</div>
+        <div class="card-body">
+          <canvas id="incomeExpenseChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">Expenses by Category</div>
+        <div class="card-body">
+          <canvas id="expenseCategoryChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">Income by Source</div>
+        <div class="card-body">
+          <canvas id="incomeSourceChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">Income and Expenses Trend</div>
+        <div class="card-body">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Parsing the Django context variables into JavaScript variables
+  const totalExpenses = parseFloat(
+    "{{ total_expenses|default:0|floatformat:2 }}"
+  );
+  const totalIncome = parseFloat("{{ total_income|default:0|floatformat:2 }}");
+  const expenseByCategory = JSON.parse(
+    '{{ expense_by_category|default:"[]"|escapejs }}'
+  );
+  const incomeBySource = JSON.parse(
+    '{{ income_by_source|default:"[]"|escapejs }}'
+  );
+  const trendData = JSON.parse('{{ trend_data|default:"[]"|escapejs }}');
+
+  // Function to create charts
+  function createChart(ctx, type, labels, data, backgroundColor, label) {
+    return new Chart(ctx, {
+      type: type,
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: label,
+            data: data,
+            backgroundColor: backgroundColor,
+            borderColor: type === "line" ? backgroundColor : undefined,
+            fill: type !== "line",
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+        plugins: {
+          legend: {
+            display: type === "doughnut",
+            position: "bottom",
+          },
+        },
+      },
+    });
+  }
+
+  // Income vs Expenses Chart
+  createChart(
+    document.getElementById("incomeExpenseChart").getContext("2d"),
+    "doughnut",
+    ["Total Income", "Total Expenses"],
+    [totalIncome, totalExpenses],
+    ["#4caf50", "#f44336"],
+    "Amount"
+  );
+
+  // Expenses by Category Chart
+  createChart(
+    document.getElementById("expenseCategoryChart").getContext("2d"),
+    "bar",
+    expenseByCategory.map((item) => item.category),
+    expenseByCategory.map((item) => item.total),
+    "#2196f3",
+    "Amount"
+  );
+
+  // Income by Source Chart
+  createChart(
+    document.getElementById("incomeSourceChart").getContext("2d"),
+    "bar",
+    incomeBySource.map((item) => item.source),
+    incomeBySource.map((item) => item.total),
+    "#ff9800",
+    "Amount"
+  );
+
+  // Trend Chart
+  new Chart(document.getElementById("trendChart").getContext("2d"), {
+    type: "line",
+    data: {
+      labels: trendData.map((item) => item.date),
+      datasets: [
+        {
+          label: "Income",
+          data: trendData.map((item) => item.income),
+          borderColor: "#4caf50",
+          fill: false,
+        },
+        {
+          label: "Expenses",
+          data: trendData.map((item) => item.expenses),
+          borderColor: "#f44336",
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+</script>
+
+{% endblock content %}

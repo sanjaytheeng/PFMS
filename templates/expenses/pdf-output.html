@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Output</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5in 1in 1in 1in;
+        }
+
+        @page :left {
+            @top-left {
+                content: "My Capital";
+            }
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+
+        @page :right {
+            @top-left {
+                content: "My Capital";
+            }
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        td:last-child {
+            text-align: right;
+        }
+
+        .total-row {
+            font-weight: bold;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Expense List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ expense.amount }}</td>
+                <td>{{ expense.category }}</td>
+                <td>{{ expense.description }}</td>
+                <td>{{ expense.date }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td colspan="4" class="text-center">Total Amount</td>
+                <td>{{ total }}</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
