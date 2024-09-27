@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.contrib.auth import authenticate, login, logout
 from userpreferences.models import UserPreference
+from icecream import ic
 
 # Create your views here.
 
@@ -110,9 +111,7 @@ class LoginView(View):
                         messages.error(request,message="Subscription Finished Please subscrabie")
                         return redirect(reverse_lazy('unpaid'))
                     
-                    messages.success(
-                        request, "Welcome, " + user.username + "You are now logged in"
-                    )
+                    
                     return redirect(reverse_lazy("dashboard_index"))
                 messages.error(
                     request,
