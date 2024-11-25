@@ -42,3 +42,5 @@ pythom3 manage.py createsuperuser
 ```
 Create a superuser to access admin pages.
 
+## Contact:
+[Email](sanjaytheeng007@gmail.com)
